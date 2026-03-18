@@ -4,28 +4,24 @@ import os
 import re
 import shutil
 import stat
+import sys
 import tarfile
 import urllib.request
 from pathlib import Path
 from platform import machine, system
 
+from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
 from setuptools.command.build_py import build_py as _build_py
 from setuptools.errors import SetupError
 
-try:
-    from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
-except ModuleNotFoundError:  # pragma: no cover
-    from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
-
-try:
+if sys.version_info >= (3, 11):
     import tomllib
-except ModuleNotFoundError:  # pragma: no cover
+else:  # pragma: no cover
     import tomli as tomllib
 
 
 ROOT = Path(__file__).resolve().parent
 PYPROJECT = ROOT / "pyproject.toml"
-RUN_CLANG_TIDY = ROOT / "src/ctidy/data/bin/run-clang-tidy.py"
 
 
 def pyproject_data() -> dict:
@@ -188,7 +184,6 @@ def stage_ctidy_payload(build_lib: Path) -> None:
     )
 
     bin_dir.mkdir(parents=True, exist_ok=True)
-    shutil.copy2(RUN_CLANG_TIDY, bin_dir / "run-clang-tidy.py")
 
     copy_executable(
         download_prebuilt_asset("clang-tidy"),

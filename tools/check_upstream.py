@@ -2,12 +2,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 import urllib.request
 from pathlib import Path
 
-try:
+if sys.version_info >= (3, 11):
     import tomllib
-except ModuleNotFoundError:  # pragma: no cover
+else:  # pragma: no cover
     import tomli as tomllib
 
 

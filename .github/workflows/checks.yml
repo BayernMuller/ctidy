@@ -20,5 +20,5 @@ jobs:
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --locked --only-group dev --no-install-project
       - run: .venv/bin/python -m compileall src tools build_hooks.py setup.py
-      - run: .venv/bin/ruff check build_hooks.py setup.py src/ctidy/__init__.py src/ctidy/__main__.py src/ctidy/cli.py src/ctidy/discovery.py tools/check_upstream.py
-      - run: .venv/bin/ty check src/ctidy/__init__.py src/ctidy/__main__.py src/ctidy/cli.py src/ctidy/discovery.py
+      - run: .venv/bin/ruff check .
+      - run: .venv/bin/ty check .

@@ -2,7 +2,6 @@ include README.md
 include pyproject.toml
 include setup.py
 include build_hooks.py
-include AGENTS.md
 recursive-include src/ctidy *.py
 recursive-include src/ctidy/data/bin run-clang-tidy.py
 recursive-include tools *.py

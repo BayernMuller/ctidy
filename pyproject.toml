@@ -34,9 +34,13 @@ scripts = { ctidy = "ctidy.cli:main" }
 
 [tool.setuptools]
 package-dir = { "" = "src" }
+include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+ctidy = ["data/bin/run-clang-tidy.py"]
 
 [tool.ctidy]
 prebuilt_release_tag = "master-796e77c"
@@ -64,4 +68,9 @@ select = [
   "E",
   "F",
   "I",
+]
+
+[tool.ty.src]
+exclude = [
+  "src/ctidy/data/bin/run-clang-tidy.py",
 ]
