@@ -4,7 +4,7 @@ requires-python = ">=3.9"
 
 [[package]]
 name = "ctidy"
-version = "20.1.8"
+version = "20.1.0"
 source = { editable = "." }
 
 [package.dev-dependencies]
