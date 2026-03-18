@@ -1,0 +1,22 @@
+name: Checks
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  lint-and-typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked --only-group dev --no-install-project
+      - run: .venv/bin/python -m compileall src tools
+      - run: .venv/bin/ruff check src tools
+      - run: .venv/bin/ty check src tools
