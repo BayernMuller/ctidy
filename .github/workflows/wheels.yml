@@ -11,25 +11,51 @@ on:
 
 jobs:
   build_wheels:
-    name: Build ${{ matrix.os }} wheels
-    runs-on: ${{ matrix.os }}
+    name: Build ${{ matrix.name }}
+    runs-on: ${{ matrix.runs_on }}
     env:
+      CIBW_BUILD: "cp39-*"
       CMAKE_BUILD_PARALLEL_LEVEL: "4"
+      CTIDY_LLVM_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/llvm-downloads
+      CIBW_ARCHS: ${{ matrix.cibw_archs }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - ubuntu-latest
+        include:
+          - name: linux-x86_64
+            runs_on: ubuntu-latest
+            cibw_archs: x86_64
+            use_ccache: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: .cache/llvm-downloads
+          key: llvm-downloads-${{ matrix.name }}-${{ hashFiles('pyproject.toml') }}
+      - if: matrix.use_ccache
+        uses: actions/cache@v4
+        with:
+          path: .ccache
+          key: ccache-${{ matrix.name }}-${{ hashFiles('CMakeLists.txt', 'pyproject.toml', 'src/ctidy/**') }}
+          restore-keys: |
+            ccache-${{ matrix.name }}-
+      - if: matrix.use_ccache && startsWith(matrix.runs_on, 'ubuntu')
+        run: sudo apt-get update && sudo apt-get install -y ccache
+      - if: matrix.use_ccache && startsWith(matrix.runs_on, 'macos')
+        run: brew install ccache
+      - if: matrix.use_ccache
+        run: |
+          echo "CCACHE_DIR=$GITHUB_WORKSPACE/.ccache" >> "$GITHUB_ENV"
+          echo "CMAKE_C_COMPILER_LAUNCHER=$(command -v ccache)" >> "$GITHUB_ENV"
+          echo "CMAKE_CXX_COMPILER_LAUNCHER=$(command -v ccache)" >> "$GITHUB_ENV"
       - run: python -m pip install --upgrade cibuildwheel
       - run: python -m cibuildwheel --output-dir wheelhouse
       - uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}
+          name: wheels-${{ matrix.name }}
           path: wheelhouse/*.whl
 
   build_sdist:

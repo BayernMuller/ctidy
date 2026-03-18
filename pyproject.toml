@@ -37,6 +37,7 @@ scripts = { ctidy = "ctidy.cli:main" }
 build-dir = "build/{wheel_tag}"
 cmake.source-dir = "."
 cmake.version = ">=3.20"
+wheel.py-api = "py3"
 wheel.packages = ["src/ctidy"]
 sdist.include = [
   ".github/workflows/*.yml",
