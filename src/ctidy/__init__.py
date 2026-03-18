@@ -1,6 +1,6 @@
+import re
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
-import re
 
 try:
     __version__ = version("ctidy")

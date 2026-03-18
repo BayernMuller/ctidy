@@ -1,5 +1,7 @@
-from pathlib import Path
+# ruff: noqa: I001
+
 import sys
+from pathlib import Path
 
 from setuptools import setup
 

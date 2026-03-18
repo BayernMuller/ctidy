@@ -54,7 +54,11 @@ def download_root() -> Path:
 
 
 def llvm_archive_path() -> Path:
-    return download_root() / prebuilt_release_tag() / f"llvm-project-{project_version()}.src.tar.xz"
+    return (
+        download_root()
+        / prebuilt_release_tag()
+        / f"llvm-project-{project_version()}.src.tar.xz"
+    )
 
 
 def current_platform() -> tuple[str, str]:
@@ -135,7 +139,9 @@ def download_prebuilt_asset(stem: str) -> Path:
 def copy_executable(source: Path, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(source, destination)
-    destination.chmod(destination.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    destination.chmod(
+        destination.stat().st_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
+    )
 
 
 def extract_resource_headers(destination: Path) -> None:
@@ -177,7 +183,9 @@ def stage_ctidy_payload(build_lib: Path) -> None:
     _, executable_suffix = current_platform()
     package_root = build_lib / "ctidy"
     bin_dir = package_root / "data" / "bin"
-    include_dir = package_root / "data" / "lib" / "clang" / llvm_major_version() / "include"
+    include_dir = (
+        package_root / "data" / "lib" / "clang" / llvm_major_version() / "include"
+    )
 
     bin_dir.mkdir(parents=True, exist_ok=True)
     shutil.copy2(RUN_CLANG_TIDY, bin_dir / "run-clang-tidy.py")

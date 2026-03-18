@@ -58,7 +58,7 @@ def rewrite_with_build_path(argv: list[str], build_path: Path) -> list[str]:
     return rewritten
 
 
-def _data_root() -> resources.abc.Traversable:
+def _data_root():
     return resources.files("ctidy").joinpath("data")
 
 
@@ -182,7 +182,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     try:
-        command_argv = resolve_build_path(argv, auto_discover=not is_help_requested(argv))
+        command_argv = resolve_build_path(
+            argv, auto_discover=not is_help_requested(argv)
+        )
         returncode = run_bundled_runner(
             command_argv,
             include_binaries=not is_help_requested(command_argv),

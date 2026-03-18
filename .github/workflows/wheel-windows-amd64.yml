@@ -12,6 +12,8 @@ on:
 jobs:
   windows_amd64:
     uses: ./.github/workflows/_wheel-build.yml
+    permissions:
+      id-token: write
     with:
       artifact_name: wheel-windows-amd64
       runs_on: windows-latest
