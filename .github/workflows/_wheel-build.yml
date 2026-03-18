@@ -1,0 +1,54 @@
+name: _wheel-build
+
+on:
+  workflow_call:
+    inputs:
+      artifact_name:
+        required: true
+        type: string
+      runs_on:
+        required: true
+        type: string
+      cibw_archs:
+        required: true
+        type: string
+      macos_deployment_target:
+        required: false
+        type: string
+        default: ""
+      publish:
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build_wheel:
+    name: Build ${{ inputs.artifact_name }}
+    runs-on: ${{ inputs.runs_on }}
+    permissions:
+      id-token: write
+    env:
+      CIBW_BUILD: "cp39-*"
+      CTIDY_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/ctidy-downloads
+      CIBW_ARCHS: ${{ inputs.cibw_archs }}
+      MACOSX_DEPLOYMENT_TARGET: ${{ inputs.macos_deployment_target }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: .cache/ctidy-downloads
+          key: ctidy-downloads-${{ inputs.artifact_name }}-${{ hashFiles('build_hooks.py', 'pyproject.toml', 'setup.py') }}
+      - run: python -m pip install --upgrade cibuildwheel
+      - run: python -m cibuildwheel --output-dir wheelhouse
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: wheelhouse/*.whl
+      - if: inputs.publish
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: wheelhouse
+

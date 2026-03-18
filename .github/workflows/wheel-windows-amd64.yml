@@ -1,0 +1,20 @@
+name: Wheel Windows amd64
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  windows_amd64:
+    uses: ./.github/workflows/_wheel-build.yml
+    with:
+      artifact_name: wheel-windows-amd64
+      runs_on: windows-latest
+      cibw_archs: AMD64
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+    secrets: inherit

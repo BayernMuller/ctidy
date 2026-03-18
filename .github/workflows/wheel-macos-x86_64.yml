@@ -1,0 +1,22 @@
+name: Wheel macOS x86_64
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+jobs:
+  macos_x86_64:
+    uses: ./.github/workflows/_wheel-build.yml
+    with:
+      artifact_name: wheel-macos-x86_64
+      runs_on: macos-13
+      cibw_archs: x86_64
+      macos_deployment_target: "10.15"
+      publish: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+    secrets: inherit
+
