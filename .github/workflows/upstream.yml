@@ -1,0 +1,62 @@
+name: Upstream Sync
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+jobs:
+  check_upstream:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - id: check
+        run: python tools/check_upstream.py --update --github-output "$GITHUB_OUTPUT"
+      - uses: peter-evans/create-pull-request@v7
+        if: steps.check.outputs.run_clang_tidy_changed == 'true'
+        with:
+          branch: automation/update-run-clang-tidy
+          commit-message: "chore: sync run-clang-tidy.py"
+          title: "chore: sync run-clang-tidy.py"
+          body: |
+            Syncs `run-clang-tidy.py` with LLVM `${{ steps.check.outputs.pinned_version }}`.
+
+            Latest upstream LLVM release detected: `${{ steps.check.outputs.latest_version }}`.
+
+            This workflow does not auto-merge.
+      - uses: actions/github-script@v7
+        if: steps.check.outputs.newer_llvm_available == 'true'
+        with:
+          script: |
+            const title = `Upstream LLVM ${process.env.LATEST_VERSION} is available`;
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+            });
+            if (issues.some((issue) => issue.title === title)) {
+              core.info(`Issue already open: ${title}`);
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body: [
+                `Pinned version: ${process.env.PINNED_VERSION}`,
+                `Latest upstream release: ${process.env.LATEST_VERSION}`,
+                '',
+                'Review the new LLVM release and update `pyproject.toml` when ready.',
+              ].join('\n'),
+            });
+        env:
+          LATEST_VERSION: ${{ steps.check.outputs.latest_version }}
+          PINNED_VERSION: ${{ steps.check.outputs.pinned_version }}
+

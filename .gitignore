@@ -1,0 +1,6 @@
+/.venv
+/build
+/dist
+/*.egg-info
+/wheelhouse
+/.pytest_cache
