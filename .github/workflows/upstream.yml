@@ -59,4 +59,31 @@ jobs:
         env:
           LATEST_VERSION: ${{ steps.check.outputs.latest_version }}
           PINNED_VERSION: ${{ steps.check.outputs.pinned_version }}
-
+      - uses: actions/github-script@v7
+        if: steps.check.outputs.newer_prebuilt_release_available == 'true'
+        with:
+          script: |
+            const title = `Prebuilt clang-tools release ${process.env.LATEST_PREBUILT_RELEASE} is available`;
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+            });
+            if (issues.some((issue) => issue.title === title)) {
+              core.info(`Issue already open: ${title}`);
+              return;
+            }
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title,
+              body: [
+                `Pinned prebuilt release: ${process.env.PINNED_PREBUILT_RELEASE}`,
+                `Latest prebuilt release: ${process.env.LATEST_PREBUILT_RELEASE}`,
+                '',
+                'Review the new `muttleyxd/clang-tools-static-binaries` release tag and update `pyproject.toml` when ready.',
+              ].join('\n'),
+            });
+        env:
+          LATEST_PREBUILT_RELEASE: ${{ steps.check.outputs.latest_prebuilt_release }}
+          PINNED_PREBUILT_RELEASE: ${{ steps.check.outputs.pinned_prebuilt_release }}

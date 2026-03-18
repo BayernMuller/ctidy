@@ -1,24 +1,23 @@
 [build-system]
 requires = [
-  "cmake>=3.20",
-  "ninja>=1.11",
-  "scikit-build-core>=0.10",
+  "setuptools>=70.1",
+  "wheel>=0.43",
+  "tomli>=1.2; python_version < '3.11'",
 ]
-build-backend = "scikit_build_core.build"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "ctidy"
-version = "20.1.8"
+version = "20.1.0"
 description = "Bundled clang-tidy wheels with a ctidy entrypoint."
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "Apache-2.0 WITH LLVM-exception" }
+license = "Apache-2.0 WITH LLVM-exception"
 authors = [{ name = "ctidy" }]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Environment :: Console",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: Apache Software License",
   "Operating System :: MacOS",
   "Operating System :: Microsoft :: Windows",
   "Operating System :: POSIX :: Linux",
@@ -33,21 +32,14 @@ classifiers = [
 ]
 scripts = { ctidy = "ctidy.cli:main" }
 
-[tool.scikit-build]
-build-dir = "build/{wheel_tag}"
-cmake.source-dir = "."
-cmake.version = ">=3.20"
-wheel.py-api = "py3"
-wheel.packages = ["src/ctidy"]
-sdist.include = [
-  ".github/workflows/*.yml",
-  "AGENTS.md",
-  "CMakeLists.txt",
-  "README.md",
-  "pyproject.toml",
-  "src/ctidy/**",
-  "tools/**",
-]
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ctidy]
+prebuilt_release_tag = "master-796e77c"
 
 [tool.cibuildwheel]
 build-verbosity = 1

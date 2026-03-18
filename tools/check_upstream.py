@@ -4,18 +4,34 @@ import argparse
 import json
 import urllib.request
 from pathlib import Path
-import tomllib
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover
+    import tomli as tomllib
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PYPROJECT = ROOT / "pyproject.toml"
 LOCAL_RUN_CLANG_TIDY = ROOT / "src/ctidy/data/bin/run-clang-tidy.py"
 LATEST_RELEASE_URL = "https://api.github.com/repos/llvm/llvm-project/releases/latest"
+LATEST_PREBUILT_RELEASE_URL = (
+    "https://api.github.com/repos/muttleyxd/clang-tools-static-binaries/releases/latest"
+)
+
+
+def pyproject_data() -> dict:
+    return tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))
 
 
 def project_version() -> str:
-    data = tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))
+    data = pyproject_data()
     return data["project"]["version"]
+
+
+def prebuilt_release_tag() -> str:
+    data = pyproject_data()
+    return data["tool"]["ctidy"]["prebuilt_release_tag"]
 
 
 def latest_release_version() -> str:
@@ -26,6 +42,16 @@ def latest_release_version() -> str:
     with urllib.request.urlopen(request) as response:
         payload = json.load(response)
     return str(payload["tag_name"]).removeprefix("llvmorg-")
+
+
+def latest_prebuilt_release_tag() -> str:
+    request = urllib.request.Request(
+        LATEST_PREBUILT_RELEASE_URL,
+        headers={"Accept": "application/vnd.github+json"},
+    )
+    with urllib.request.urlopen(request) as response:
+        payload = json.load(response)
+    return str(payload["tag_name"])
 
 
 def download_upstream_run_clang_tidy(version: str) -> str:
@@ -49,7 +75,9 @@ def main() -> int:
     args = parser.parse_args()
 
     pinned = project_version()
+    pinned_prebuilt = prebuilt_release_tag()
     latest = latest_release_version()
+    latest_prebuilt = latest_prebuilt_release_tag()
     upstream = download_upstream_run_clang_tidy(pinned)
     local = LOCAL_RUN_CLANG_TIDY.read_text(encoding="utf-8")
     changed = upstream != local
@@ -59,8 +87,14 @@ def main() -> int:
 
     print(f"pinned_version={pinned}")
     print(f"latest_version={latest}")
+    print(f"pinned_prebuilt_release={pinned_prebuilt}")
+    print(f"latest_prebuilt_release={latest_prebuilt}")
     print(f"run_clang_tidy_changed={'true' if changed else 'false'}")
     print(f"newer_llvm_available={'true' if latest != pinned else 'false'}")
+    print(
+        "newer_prebuilt_release_available="
+        f"{'true' if latest_prebuilt != pinned_prebuilt else 'false'}"
+    )
 
     if args.github_output is not None:
         write_github_output(
@@ -68,8 +102,13 @@ def main() -> int:
             {
                 "pinned_version": pinned,
                 "latest_version": latest,
+                "pinned_prebuilt_release": pinned_prebuilt,
+                "latest_prebuilt_release": latest_prebuilt,
                 "run_clang_tidy_changed": "true" if changed else "false",
                 "newer_llvm_available": "true" if latest != pinned else "false",
+                "newer_prebuilt_release_available": (
+                    "true" if latest_prebuilt != pinned_prebuilt else "false"
+                ),
             },
         )
 
