@@ -2,54 +2,109 @@
 
 `cppllvm` is a monorepo for Python-packaged C/C++ LLVM command-line tools.
 
-Today it contains:
+[![PyPI - ctidy](https://img.shields.io/pypi/v/ctidy?label=ctidy&logo=pypi&logoColor=white)](https://pypi.org/project/ctidy/)
+[![PyPI - cformat](https://img.shields.io/pypi/v/cformat?label=cformat&logo=pypi&logoColor=white)](https://pypi.org/project/cformat/)
+[![Checks](https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml)
+[![Wheels ctidy](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml)
+[![Wheels cformat](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml)
+[![Release ctidy](https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml)
+[![Release cformat](https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml)
 
-- `ctidy`: bundled `clang-tidy` and `clang-apply-replacements`
+The repository currently publishes two wheel-only packages:
+
+- `ctidy`: bundled `clang-tidy`, `clang-apply-replacements`, LLVM resource headers, and `run-clang-tidy.py`
 - `cformat`: bundled `clang-format`
 
-Install them independently:
+Each package ships its own executable and always uses the bundled LLVM tools. There is no fallback to a system-installed `clang-tidy` or `clang-format`.
+
+## Overview
+
+`cppllvm` makes it easy to set up a consistent C/C++ developer environment with Python packaging.
+
+Instead of asking every developer or CI job to install and manage a matching LLVM toolchain by hand, you can install `ctidy` and `cformat` with `uv` and immediately get reproducible `clang-tidy` and `clang-format` commands in your environment.
+
+This is useful when you want:
+
+- fast setup for new developers
+- the same lint/format tool versions in local development and CI
+- LLVM tooling without depending on a system package manager
+- Python-managed C/C++ tooling that is easy to add, pin, and upgrade
+
+## Releases
+
+
+| Package | PyPI project | Release trigger | Package docs |
+| --- | --- | --- | --- |
+| `ctidy` | [ctidy](https://pypi.org/project/ctidy/) | `ctidy-v*` tag | [packages/ctidy/README.md](packages/ctidy/README.md) |
+| `cformat` | [cformat](https://pypi.org/project/cformat/) | `cformat-v*` tag | [packages/cformat/README.md](packages/cformat/README.md) |
+
+
+PyPI releases are wheel-only. Neither package publishes an `sdist`.
+
+## Platform Availability
+
+Available wheels are limited to the upstream LLVM 20 prebuilt assets pinned by this repository.
+
+
+| Platform | Python ABI | `ctidy` | `cformat` |
+| --- | --- | --- | --- |
+| Linux `x86_64` | `cp39+` | ✅ | ✅ |
+| macOS `x86_64` | `cp39+` | ✅ | ✅ |
+| macOS `arm64` | `cp39+` | ✅ | ✅ |
+| Windows `x86_64` | `cp39+` | ✅ | ✅ |
+
+
+If the upstream static build release does not publish an asset for an OS/CPU pair, this repository does not produce a wheel for that platform.
+
+## Installation
+
+Recommended package installation is with `uv`:
 
 ```bash
 uv add ctidy
 uv add cformat
 ```
 
-## `ctidy`
-
-`ctidy` packages `clang-tidy`, `clang-apply-replacements`, resource headers, and a bundled `run-clang-tidy.py` into a Python wheel so the tool can be invoked with:
+For one-off usage without modifying a project environment, use `uvx`:
 
 ```bash
-ctidy
-uv run ctidy
+uvx ctidy --version
+uvx cformat --version
 ```
 
-The package always uses the bundled binaries. It never falls back to a system `clang-tidy`.
+Package-specific usage and examples live in the package READMEs.
 
-`ctidy` does not build LLVM in this repository. During wheel builds it only:
+## Build And Distribution Model
+
+This repository does not build LLVM from source. During wheel builds, each package only:
 
 - downloads pinned prebuilt static binaries from `muttleyxd/clang-tools-static-binaries`
 - verifies their `.sha512sum` files
-- downloads official LLVM release headers for `lib/clang/<major>/include`
-- bundles the upstream LLVM `run-clang-tidy.py`
+- for `ctidy`, downloads official LLVM release headers for `lib/clang/<major>/include`
+- for `ctidy`, bundles the upstream LLVM `run-clang-tidy.py`
 
-PyPI releases are wheel-only for now. `ctidy` does not publish an `sdist`.
+## Repository Layout
 
-Supported wheel platforms are limited to the LLVM 20 assets that exist in the pinned prebuilt release:
-
-- Linux `x86_64`
-- macOS `x86_64`
-- macOS `arm64`
-- Windows `x86_64`
-
-If the upstream static build release does not publish an asset for your OS/CPU pair, `ctidy` will not build a wheel for that platform.
-
-## `cformat`
-
-`cformat` packages `clang-format` into a Python wheel so the tool can be invoked with:
-
-```bash
-cformat
-uv run cformat
+```text
+packages/
+  cformat/   Python package for bundled clang-format
+  ctidy/     Python package for bundled clang-tidy tools
+tests/       Repository-level tests for packaging and CLI behavior
+tools/       Release and maintenance helpers
 ```
 
-Like `ctidy`, it is wheel-only, uses the pinned prebuilt static binary release, and only publishes wheels for the OS/CPU combinations that exist in that upstream release.
+## Local Development
+
+Install the workspace tooling:
+
+```bash
+uv sync --group dev
+```
+
+Run the repository checks:
+
+```bash
+PYTHONPATH=packages/ctidy/src:packages/cformat/src:. python -m unittest discover -s tests
+ruff check .
+ty check .
+```
