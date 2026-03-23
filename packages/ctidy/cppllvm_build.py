@@ -2,7 +2,6 @@ from __future__ import annotations
 
 # Vendored copy of /cppllvm_build.py.
 # This file stays package-local so `packages/ctidy` can build in isolation.
-
 import os
 import re
 import shutil

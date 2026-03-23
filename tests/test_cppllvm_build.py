@@ -17,6 +17,18 @@ from cppllvm_build import (
 
 
 ROOT = Path(__file__).resolve().parents[1]
+ROOT_HELPER_BANNER = (
+    "Canonical shared build helper for cppllvm packages.\n"
+    "# Package-local copies are vendored so each package can build in isolation."
+)
+CTIDY_HELPER_BANNER = (
+    "Vendored copy of /cppllvm_build.py.\n"
+    "# This file stays package-local so `packages/ctidy` can build in isolation."
+)
+CFORMAT_HELPER_BANNER = (
+    "Vendored copy of /cppllvm_build.py.\n"
+    "# This file stays package-local so `packages/cformat` can build in isolation."
+)
 CTIDY_CONFIG = PackageBuildConfig(
     package_dir=ROOT / "packages/ctidy",
     package_name="ctidy",
@@ -36,21 +48,11 @@ class CppLlvmBuildTests(unittest.TestCase):
         root_helper = (ROOT / "cppllvm_build.py").read_text(encoding="utf-8")
         self.assertEqual(
             (ROOT / "packages/ctidy/cppllvm_build.py").read_text(encoding="utf-8"),
-            root_helper.replace(
-                "Canonical shared build helper for cppllvm packages.\n"
-                "# Package-local copies are vendored so each package can build in isolation.",
-                "Vendored copy of /cppllvm_build.py.\n"
-                "# This file stays package-local so `packages/ctidy` can build in isolation.",
-            ),
+            root_helper.replace(ROOT_HELPER_BANNER, CTIDY_HELPER_BANNER),
         )
         self.assertEqual(
             (ROOT / "packages/cformat/cppllvm_build.py").read_text(encoding="utf-8"),
-            root_helper.replace(
-                "Canonical shared build helper for cppllvm packages.\n"
-                "# Package-local copies are vendored so each package can build in isolation.",
-                "Vendored copy of /cppllvm_build.py.\n"
-                "# This file stays package-local so `packages/cformat` can build in isolation.",
-            ),
+            root_helper.replace(ROOT_HELPER_BANNER, CFORMAT_HELPER_BANNER),
         )
 
     @patch("cppllvm_build.machine", return_value="x86_64")
