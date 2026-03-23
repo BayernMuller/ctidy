@@ -53,7 +53,7 @@ jobs:
                 `Pinned version: ${process.env.PINNED_VERSION}`,
                 `Latest upstream release: ${process.env.LATEST_VERSION}`,
                 '',
-                'Review the new LLVM release and update `pyproject.toml` when ready.',
+                'Review the new LLVM release and update both package `pyproject.toml` files when ready.',
               ].join('\n'),
             });
         env:
@@ -81,7 +81,7 @@ jobs:
                 `Pinned prebuilt release: ${process.env.PINNED_PREBUILT_RELEASE}`,
                 `Latest prebuilt release: ${process.env.LATEST_PREBUILT_RELEASE}`,
                 '',
-                'Review the new `muttleyxd/clang-tools-static-binaries` release tag and update `pyproject.toml` when ready.',
+                'Review the new `muttleyxd/clang-tools-static-binaries` release tag and update both package `pyproject.toml` files when ready.',
               ].join('\n'),
             });
         env:

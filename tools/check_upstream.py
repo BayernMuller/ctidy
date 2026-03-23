@@ -13,26 +13,41 @@ else:  # pragma: no cover
 
 
 ROOT = Path(__file__).resolve().parents[1]
-PYPROJECT = ROOT / "pyproject.toml"
-LOCAL_RUN_CLANG_TIDY = ROOT / "src/ctidy/data/bin/run-clang-tidy.py"
+PACKAGE_PYPROJECTS = {
+    "ctidy": ROOT / "packages" / "ctidy" / "pyproject.toml",
+    "cformat": ROOT / "packages" / "cformat" / "pyproject.toml",
+}
+LOCAL_RUN_CLANG_TIDY = (
+    ROOT / "packages" / "ctidy" / "src" / "ctidy" / "data" / "bin" / "run-clang-tidy.py"
+)
 LATEST_RELEASE_URL = "https://api.github.com/repos/llvm/llvm-project/releases/latest"
 LATEST_PREBUILT_RELEASE_URL = (
     "https://api.github.com/repos/muttleyxd/clang-tools-static-binaries/releases/latest"
 )
 
 
-def pyproject_data() -> dict:
-    return tomllib.loads(PYPROJECT.read_text(encoding="utf-8"))
+def pyproject_data(package: str) -> dict:
+    return tomllib.loads(PACKAGE_PYPROJECTS[package].read_text(encoding="utf-8"))
 
 
-def project_version() -> str:
-    data = pyproject_data()
+def project_version(package: str) -> str:
+    data = pyproject_data(package)
     return data["project"]["version"]
 
 
-def prebuilt_release_tag() -> str:
-    data = pyproject_data()
-    return data["tool"]["ctidy"]["prebuilt_release_tag"]
+def prebuilt_release_tag(package: str) -> str:
+    data = pyproject_data(package)
+    return data["tool"][package]["prebuilt_release_tag"]
+
+
+def shared_value(values: dict[str, str], label: str) -> str:
+    unique = set(values.values())
+    if len(unique) != 1:
+        details = ", ".join(
+            f"{package}={value}" for package, value in sorted(values.items())
+        )
+        raise RuntimeError(f"Mismatched {label} across packages: {details}")
+    return next(iter(unique))
 
 
 def latest_release_version() -> str:
@@ -75,8 +90,14 @@ def main() -> int:
     parser.add_argument("--github-output", type=Path)
     args = parser.parse_args()
 
-    pinned = project_version()
-    pinned_prebuilt = prebuilt_release_tag()
+    package_versions = {
+        package: project_version(package) for package in PACKAGE_PYPROJECTS
+    }
+    package_prebuilt_tags = {
+        package: prebuilt_release_tag(package) for package in PACKAGE_PYPROJECTS
+    }
+    pinned = shared_value(package_versions, "LLVM version")
+    pinned_prebuilt = shared_value(package_prebuilt_tags, "prebuilt release tag")
     latest = latest_release_version()
     latest_prebuilt = latest_prebuilt_release_tag()
     upstream = download_upstream_run_clang_tidy(pinned)

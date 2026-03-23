@@ -4,7 +4,5 @@ include setup.py
 include build_hooks.py
 recursive-include src/ctidy *.py
 recursive-include src/ctidy/data/bin run-clang-tidy.py
-recursive-include tools *.py
-recursive-include .github/workflows *.yml
 global-exclude __pycache__
 global-exclude *.py[cod]

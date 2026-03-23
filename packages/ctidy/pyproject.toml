@@ -1,0 +1,52 @@
+[build-system]
+requires = [
+  "setuptools>=70.1",
+  "wheel>=0.43",
+  "tomli>=1.2; python_version < '3.11'",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ctidy"
+version = "20.1.0"
+description = "Bundled prebuilt clang-tidy wheels with a ctidy entrypoint."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0 WITH LLVM-exception"
+authors = [{ name = "ctidy" }]
+urls = { Homepage = "https://github.com/BayernMuller/cppllvm", Repository = "https://github.com/BayernMuller/cppllvm", Issues = "https://github.com/BayernMuller/cppllvm/issues" }
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: MacOS",
+  "Operating System :: Microsoft :: Windows",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Quality Assurance",
+]
+scripts = { ctidy = "ctidy.cli:main" }
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ctidy = ["data/bin/run-clang-tidy.py"]
+
+[tool.ctidy]
+prebuilt_release_tag = "master-796e77c"
+
+[tool.cibuildwheel]
+build-verbosity = 1
+repair-wheel-command = ""
+test-command = "python -c \"import importlib.resources as resources, os, subprocess; from ctidy import __version__; data = resources.files('ctidy').joinpath('data'); binary = 'clang-tidy.exe' if os.name == 'nt' else 'clang-tidy'; assert data.joinpath('bin', binary).is_file(); assert data.joinpath('bin', 'run-clang-tidy.py').is_file(); assert data.joinpath('lib', 'clang', __version__.split('.', 1)[0], 'include').is_dir(); subprocess.check_call(['ctidy', '--help']); subprocess.check_call(['ctidy', '--version'])\""

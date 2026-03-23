@@ -1,20 +1,4 @@
-# cppllvm
-
-`cppllvm` is a monorepo for Python-packaged C/C++ LLVM command-line tools.
-
-Today it contains:
-
-- `ctidy`: bundled `clang-tidy` and `clang-apply-replacements`
-- `cformat`: bundled `clang-format`
-
-Install them independently:
-
-```bash
-uv add ctidy
-uv add cformat
-```
-
-## `ctidy`
+# ctidy
 
 `ctidy` packages `clang-tidy`, `clang-apply-replacements`, resource headers, and a bundled `run-clang-tidy.py` into a Python wheel so the tool can be invoked with:
 
@@ -42,14 +26,3 @@ Supported wheel platforms are limited to the LLVM 20 assets that exist in the pi
 - Windows `x86_64`
 
 If the upstream static build release does not publish an asset for your OS/CPU pair, `ctidy` will not build a wheel for that platform.
-
-## `cformat`
-
-`cformat` packages `clang-format` into a Python wheel so the tool can be invoked with:
-
-```bash
-cformat
-uv run cformat
-```
-
-Like `ctidy`, it is wheel-only, uses the pinned prebuilt static binary release, and only publishes wheels for the OS/CPU combinations that exist in that upstream release.

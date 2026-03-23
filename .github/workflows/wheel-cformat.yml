@@ -1,0 +1,42 @@
+name: Wheels cformat
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build_wheels:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - artifact_name: cformat-wheel-linux-x86_64
+            runs_on: ubuntu-latest
+            cibw_archs: x86_64
+            macos_deployment_target: ""
+          - artifact_name: cformat-wheel-macos-x86_64
+            runs_on: macos-13
+            cibw_archs: x86_64
+            macos_deployment_target: "10.15"
+          - artifact_name: cformat-wheel-macos-arm64
+            runs_on: macos-14
+            cibw_archs: arm64
+            macos_deployment_target: "11.0"
+          - artifact_name: cformat-wheel-windows-amd64
+            runs_on: windows-latest
+            cibw_archs: AMD64
+            macos_deployment_target: ""
+    uses: ./.github/workflows/_wheel-build.yml
+    permissions:
+      id-token: write
+    with:
+      package_name: cformat
+      package_dir: packages/cformat
+      artifact_name: ${{ matrix.artifact_name }}
+      runs_on: ${{ matrix.runs_on }}
+      cibw_archs: ${{ matrix.cibw_archs }}
+      macos_deployment_target: ${{ matrix.macos_deployment_target }}
+    secrets: inherit

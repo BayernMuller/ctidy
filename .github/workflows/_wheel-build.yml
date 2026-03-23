@@ -3,6 +3,12 @@ name: _wheel-build
 on:
   workflow_call:
     inputs:
+      package_name:
+        required: true
+        type: string
+      package_dir:
+        required: true
+        type: string
       artifact_name:
         required: true
         type: string
@@ -16,10 +22,6 @@ on:
         required: false
         type: string
         default: ""
-      publish:
-        required: false
-        type: boolean
-        default: false
 
 jobs:
   build_wheel:
@@ -29,9 +31,10 @@ jobs:
       id-token: write
     env:
       CIBW_BUILD: "cp39-*"
-      CTIDY_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/ctidy-downloads
+      CPPLLVM_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/${{ inputs.package_name }}-downloads
       CIBW_ARCHS: ${{ inputs.cibw_archs }}
       MACOSX_DEPLOYMENT_TARGET: ${{ inputs.macos_deployment_target }}
+      CIBW_REPAIR_WHEEL_COMMAND: ""
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -39,16 +42,12 @@ jobs:
           python-version: "3.12"
       - uses: actions/cache@v4
         with:
-          path: .cache/ctidy-downloads
-          key: ctidy-downloads-${{ inputs.artifact_name }}-${{ hashFiles('build_hooks.py', 'pyproject.toml', 'setup.py') }}
+          path: .cache/${{ inputs.package_name }}-downloads
+          key: ${{ inputs.package_name }}-downloads-${{ inputs.artifact_name }}-${{ hashFiles('cppllvm_build.py') }}-${{ hashFiles(format('{0}/build_hooks.py', inputs.package_dir)) }}-${{ hashFiles(format('{0}/pyproject.toml', inputs.package_dir)) }}-${{ hashFiles(format('{0}/setup.py', inputs.package_dir)) }}
       - run: python -m pip install --upgrade cibuildwheel
-      - run: python -m cibuildwheel --output-dir wheelhouse
+      - run: python -m cibuildwheel --output-dir "${{ github.workspace }}/wheelhouse"
+        working-directory: ${{ inputs.package_dir }}
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ inputs.artifact_name }}
           path: wheelhouse/*.whl
-      - if: inputs.publish
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          packages-dir: wheelhouse
-

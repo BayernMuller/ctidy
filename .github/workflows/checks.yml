@@ -11,7 +11,7 @@ jobs:
   lint-and-typecheck:
     runs-on: ubuntu-latest
     env:
-      PYTHONPATH: .
+      PYTHONPATH: packages/ctidy/src:packages/cformat/src:.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -19,6 +19,7 @@ jobs:
           python-version: "3.12"
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --locked --only-group dev --no-install-project
-      - run: .venv/bin/python -m compileall src tools build_hooks.py setup.py
+      - run: .venv/bin/python -m compileall packages/ctidy/src packages/cformat/src tools cppllvm_build.py packages/ctidy/build_hooks.py packages/ctidy/setup.py packages/cformat/build_hooks.py packages/cformat/setup.py
+      - run: PYTHONPATH=packages/ctidy/src:packages/cformat/src:. .venv/bin/python -m unittest discover -s tests
       - run: .venv/bin/ruff check .
       - run: .venv/bin/ty check .
