@@ -116,6 +116,11 @@ def asset_name(config: PackageBuildConfig, stem: str) -> str:
     return f"{stem}-{llvm_major_version(config)}_{platform_name}{suffix}"
 
 
+def checksum_asset_name(config: PackageBuildConfig, stem: str) -> str:
+    platform_name, _ = current_platform(config)
+    return f"{stem}-{llvm_major_version(config)}_{platform_name}.sha512sum"
+
+
 def cached_download(url: str, destination: Path, *, package_name: str) -> Path:
     if destination.exists() and destination.stat().st_size > 0:
         return destination
@@ -151,19 +156,20 @@ def sha512(path: Path) -> str:
 def download_prebuilt_asset(config: PackageBuildConfig, stem: str) -> Path:
     release_tag = prebuilt_release_tag(config)
     asset = asset_name(config, stem)
+    checksum_asset = checksum_asset_name(config, stem)
     asset_path = download_root(config) / release_tag / asset
     base_url = (
         "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
         f"{release_tag}/{asset}"
     )
-    hash_path = asset_path.with_name(f"{asset}.sha512sum")
+    hash_path = asset_path.with_name(checksum_asset)
+    checksum_url = (
+        "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
+        f"{release_tag}/{checksum_asset}"
+    )
 
     cached_download(base_url, asset_path, package_name=config.package_name)
-    cached_download(
-        f"{base_url}.sha512sum",
-        hash_path,
-        package_name=config.package_name,
-    )
+    cached_download(checksum_url, hash_path, package_name=config.package_name)
 
     expected = read_expected_sha512(hash_path)
     actual = sha512(asset_path)

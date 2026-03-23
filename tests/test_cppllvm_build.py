@@ -8,7 +8,12 @@ from unittest.mock import patch
 
 from setuptools.errors import SetupError
 
-from cppllvm_build import PackageBuildConfig, asset_name, current_platform
+from cppllvm_build import (
+    PackageBuildConfig,
+    asset_name,
+    checksum_asset_name,
+    current_platform,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -63,6 +68,10 @@ class CppLlvmBuildTests(unittest.TestCase):
         self.assertEqual(
             asset_name(CFORMAT_CONFIG, "clang-format"),
             "clang-format-20_windows-amd64.exe",
+        )
+        self.assertEqual(
+            checksum_asset_name(CFORMAT_CONFIG, "clang-format"),
+            "clang-format-20_windows-amd64.sha512sum",
         )
 
     @patch("cppllvm_build.machine", return_value="arm64")
