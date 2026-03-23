@@ -1,23 +1,29 @@
+<p align="center">
+    <img src="assets/logo.png" width="400"/>
+    <br>
+    <img src='assets/logo_license.svg'>
+</p>
+
+<span align="center">
+
 # cppllvm
 
-`cppllvm` is a monorepo for Python-packaged C/C++ LLVM command-line tools.
+</span>
 
-[![PyPI - ctidy](https://img.shields.io/pypi/v/ctidy?label=ctidy&logo=pypi&logoColor=white)](https://pypi.org/project/ctidy/)
-[![PyPI - cformat](https://img.shields.io/pypi/v/cformat?label=cformat&logo=pypi&logoColor=white)](https://pypi.org/project/cformat/)
-[![Checks](https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml)
-[![Wheels ctidy](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml)
-[![Wheels cformat](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml)
-[![Release ctidy](https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml)
-[![Release cformat](https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml/badge.svg)](https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml)
+<p align="center">
+    <a href="https://pypi.org/project/ctidy/"><img src="https://img.shields.io/pypi/v/ctidy?label=ctidy&logo=pypi&logoColor=white" alt="ctidy"/></a>
+    <a href="https://pypi.org/project/cformat/"><img src="https://img.shields.io/pypi/v/cformat?label=cformat&logo=pypi&logoColor=white" alt="cformat"/></a>
+</p>
 
-The repository currently publishes two wheel-only packages:
+<p align="center">
+    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml/badge.svg" alt="Checks"/></a>
+    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml/badge.svg" alt="Wheels ctidy"/></a>
+    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml/badge.svg" alt="Wheels cformat"/></a>
+    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml/badge.svg" alt="Release ctidy"/></a>
+    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml/badge.svg" alt="Release cformat"/></a>
+</p>
 
-- `ctidy`: bundled `clang-tidy`, `clang-apply-replacements`, LLVM resource headers, and `run-clang-tidy.py`
-- `cformat`: bundled `clang-format`
-
-Each package ships its own executable and always uses the bundled LLVM tools. There is no fallback to a system-installed `clang-tidy` or `clang-format`.
-
-## Overview
+### Overview
 
 `cppllvm` makes it easy to set up a consistent C/C++ developer environment with Python packaging.
 
@@ -30,7 +36,7 @@ This is useful when you want:
 - LLVM tooling without depending on a system package manager
 - Python-managed C/C++ tooling that is easy to add, pin, and upgrade
 
-## Releases
+### Releases
 
 
 | Package | PyPI project | Release trigger | Package docs |
@@ -41,7 +47,7 @@ This is useful when you want:
 
 PyPI releases are wheel-only. Neither package publishes an `sdist`.
 
-## Platform Availability
+### Platform Availability
 
 Available wheels are limited to the upstream LLVM 20 prebuilt assets pinned by this repository.
 
@@ -56,7 +62,7 @@ Available wheels are limited to the upstream LLVM 20 prebuilt assets pinned by t
 
 If the upstream static build release does not publish an asset for an OS/CPU pair, this repository does not produce a wheel for that platform.
 
-## Installation
+### Installation
 
 Recommended package installation is with `uv`:
 
@@ -74,7 +80,7 @@ uvx cformat --version
 
 Package-specific usage and examples live in the package READMEs.
 
-## Build And Distribution Model
+### Build And Distribution Model
 
 This repository does not build LLVM from source. During wheel builds, each package only:
 
@@ -83,7 +89,7 @@ This repository does not build LLVM from source. During wheel builds, each packa
 - for `ctidy`, downloads official LLVM release headers for `lib/clang/<major>/include`
 - for `ctidy`, bundles the upstream LLVM `run-clang-tidy.py`
 
-## Repository Layout
+### Repository Layout
 
 ```text
 packages/
@@ -93,7 +99,7 @@ tests/       Repository-level tests for packaging and CLI behavior
 tools/       Release and maintenance helpers
 ```
 
-## Local Development
+### Local Development
 
 Install the workspace tooling:
 
