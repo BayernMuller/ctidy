@@ -25,6 +25,8 @@
 
 ### Overview
 
+![](assets/example.png)
+
 `cppllvm` makes it easy to set up a consistent C/C++ developer environment with Python packaging.
 
 Instead of asking every developer or CI job to install and manage a matching LLVM toolchain by hand, you can install `ctidy` and `cformat` with `uv` and immediately get reproducible `clang-tidy` and `clang-format` commands in your environment.
