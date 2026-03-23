@@ -15,6 +15,7 @@ from platform import machine, system
 
 from setuptools.command.bdist_wheel import bdist_wheel as _bdist_wheel
 from setuptools.command.build_py import build_py as _build_py
+from setuptools.command.install import install as _install
 from setuptools.errors import SetupError
 
 if sys.version_info >= (3, 11):
@@ -249,11 +250,16 @@ def stage_payload(config: PackageBuildConfig, build_lib: Path) -> None:
 
 def make_build_commands(
     config: PackageBuildConfig,
-) -> tuple[type[_build_py], type[_bdist_wheel]]:
+) -> tuple[type[_build_py], type[_bdist_wheel], type[_install]]:
     class build_py(_build_py):
         def run(self) -> None:
             super().run()
             stage_payload(config, Path(self.build_lib))
+
+    class install(_install):
+        def finalize_options(self) -> None:
+            super().finalize_options()
+            self.install_lib = self.install_platlib
 
     class bdist_wheel(_bdist_wheel):
         def finalize_options(self) -> None:
@@ -264,4 +270,4 @@ def make_build_commands(
             _, _, platform_tag = super().get_tag()
             return "py3", "none", platform_tag
 
-    return build_py, bdist_wheel
+    return build_py, bdist_wheel, install

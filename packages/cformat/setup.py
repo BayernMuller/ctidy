@@ -19,5 +19,6 @@ setup(
     cmdclass={
         "build_py": BUILD_HOOKS.build_py,
         "bdist_wheel": BUILD_HOOKS.bdist_wheel,
+        "install": BUILD_HOOKS.install,
     }
 )

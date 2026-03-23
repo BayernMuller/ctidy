@@ -17,7 +17,7 @@ BUILD_HELPERS = importlib.util.module_from_spec(MODULE_SPEC)
 sys.modules[MODULE_SPEC.name] = BUILD_HELPERS
 MODULE_SPEC.loader.exec_module(BUILD_HELPERS)
 
-build_py, bdist_wheel = BUILD_HELPERS.make_build_commands(
+build_py, bdist_wheel, install = BUILD_HELPERS.make_build_commands(
     BUILD_HELPERS.PackageBuildConfig(
         package_dir=ROOT,
         package_name="cformat",
