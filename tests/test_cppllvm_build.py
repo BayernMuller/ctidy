@@ -27,6 +27,27 @@ CFORMAT_CONFIG = PackageBuildConfig(
 
 
 class CppLlvmBuildTests(unittest.TestCase):
+    def test_vendored_build_helpers_match_root_copy(self) -> None:
+        root_helper = (ROOT / "cppllvm_build.py").read_text(encoding="utf-8")
+        self.assertEqual(
+            (ROOT / "packages/ctidy/cppllvm_build.py").read_text(encoding="utf-8"),
+            root_helper.replace(
+                "Canonical shared build helper for cppllvm packages.\n"
+                "# Package-local copies are vendored so each package can build in isolation.",
+                "Vendored copy of /cppllvm_build.py.\n"
+                "# This file stays package-local so `packages/ctidy` can build in isolation.",
+            ),
+        )
+        self.assertEqual(
+            (ROOT / "packages/cformat/cppllvm_build.py").read_text(encoding="utf-8"),
+            root_helper.replace(
+                "Canonical shared build helper for cppllvm packages.\n"
+                "# Package-local copies are vendored so each package can build in isolation.",
+                "Vendored copy of /cppllvm_build.py.\n"
+                "# This file stays package-local so `packages/cformat` can build in isolation.",
+            ),
+        )
+
     @patch("cppllvm_build.machine", return_value="x86_64")
     @patch("cppllvm_build.system", return_value="Linux")
     def test_ctidy_asset_name_uses_llvm_major(self, *_args: object) -> None:

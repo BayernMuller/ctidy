@@ -2,6 +2,7 @@ include README.md
 include pyproject.toml
 include setup.py
 include build_hooks.py
+include cppllvm_build.py
 recursive-include src/ctidy *.py
 recursive-include src/ctidy/data/bin run-clang-tidy.py
 global-exclude __pycache__

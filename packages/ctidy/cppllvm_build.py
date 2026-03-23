@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-# Canonical shared build helper for cppllvm packages.
-# Package-local copies are vendored so each package can build in isolation.
+# Vendored copy of /cppllvm_build.py.
+# This file stays package-local so `packages/ctidy` can build in isolation.
 
 import os
 import re
