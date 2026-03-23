@@ -43,7 +43,9 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: .cache/${{ inputs.package_name }}-downloads
-          key: ${{ inputs.package_name }}-downloads-${{ inputs.artifact_name }}-${{ hashFiles('cppllvm_build.py') }}-${{ hashFiles(format('{0}/build_hooks.py', inputs.package_dir)) }}-${{ hashFiles(format('{0}/pyproject.toml', inputs.package_dir)) }}-${{ hashFiles(format('{0}/setup.py', inputs.package_dir)) }}
+          key: ${{ inputs.package_name }}-downloads-${{ inputs.artifact_name }}-${{ github.sha }}
+          restore-keys: |
+            ${{ inputs.package_name }}-downloads-${{ inputs.artifact_name }}-
       - run: python -m pip install --upgrade cibuildwheel
       - run: python -m cibuildwheel --output-dir "${{ github.workspace }}/wheelhouse"
         working-directory: ${{ inputs.package_dir }}

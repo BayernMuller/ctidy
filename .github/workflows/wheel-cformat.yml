@@ -18,7 +18,7 @@ jobs:
             cibw_archs: x86_64
             macos_deployment_target: ""
           - artifact_name: cformat-wheel-macos-x86_64
-            runs_on: macos-13
+            runs_on: macos-15-intel
             cibw_archs: x86_64
             macos_deployment_target: "10.15"
           - artifact_name: cformat-wheel-macos-arm64
