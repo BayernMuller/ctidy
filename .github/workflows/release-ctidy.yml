@@ -11,6 +11,8 @@ concurrency:
 
 jobs:
   build_wheels:
+    permissions:
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
