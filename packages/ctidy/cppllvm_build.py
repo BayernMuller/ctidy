@@ -34,6 +34,8 @@ SUPPORTED_PREBUILT_PLATFORMS: dict[tuple[str, str], tuple[str, str]] = {
     ("Windows", "amd64"): ("windows-amd64", ".exe"),
 }
 
+LINUX_WHEEL_PLATFORM_TAG = "manylinux_2_17_x86_64.manylinux2014_x86_64"
+
 
 @dataclass(frozen=True)
 class PackageBuildConfig:
@@ -118,6 +120,14 @@ def asset_name(config: PackageBuildConfig, stem: str) -> str:
 def checksum_asset_name(config: PackageBuildConfig, stem: str) -> str:
     platform_name, _ = current_platform(config)
     return f"{stem}-{llvm_major_version(config)}_{platform_name}.sha512sum"
+
+
+def wheel_platform_tag(default_platform_tag: str) -> str:
+    host_system = system()
+    host_machine = machine().lower()
+    if host_system == "Linux" and host_machine in {"x86_64", "amd64"}:
+        return LINUX_WHEEL_PLATFORM_TAG
+    return default_platform_tag
 
 
 def cached_download(url: str, destination: Path, *, package_name: str) -> Path:
@@ -262,6 +272,6 @@ def make_build_commands(
 
         def get_tag(self) -> tuple[str, str, str]:
             _, _, platform_tag = super().get_tag()
-            return "py3", "none", platform_tag
+            return "py3", "none", wheel_platform_tag(platform_tag)
 
     return build_py, bdist_wheel
