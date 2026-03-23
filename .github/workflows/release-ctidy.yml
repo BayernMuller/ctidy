@@ -61,3 +61,4 @@ jobs:
         with:
           packages-dir: dist
           attestations: false
+          verbose: true
