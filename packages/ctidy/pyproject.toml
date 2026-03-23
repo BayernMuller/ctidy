@@ -48,5 +48,4 @@ prebuilt_release_tag = "master-796e77c"
 
 [tool.cibuildwheel]
 build-verbosity = 1
-repair-wheel-command = ""
 test-command = "python -c \"import importlib.resources as resources, os, subprocess; from ctidy import __version__; data = resources.files('ctidy').joinpath('data'); binary = 'clang-tidy.exe' if os.name == 'nt' else 'clang-tidy'; assert data.joinpath('bin', binary).is_file(); assert data.joinpath('bin', 'run-clang-tidy.py').is_file(); assert data.joinpath('lib', 'clang', __version__.split('.', 1)[0], 'include').is_dir(); subprocess.check_call(['ctidy', '--help']); subprocess.check_call(['ctidy', '--version'])\""

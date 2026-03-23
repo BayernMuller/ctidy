@@ -9,12 +9,10 @@ from unittest.mock import patch
 from setuptools.errors import SetupError
 
 from cppllvm_build import (
-    LINUX_WHEEL_PLATFORM_TAG,
     PackageBuildConfig,
     asset_name,
     checksum_asset_name,
     current_platform,
-    wheel_platform_tag,
 )
 
 
@@ -76,14 +74,6 @@ class CppLlvmBuildTests(unittest.TestCase):
         self.assertEqual(
             checksum_asset_name(CFORMAT_CONFIG, "clang-format"),
             "clang-format-20_windows-amd64.sha512sum",
-        )
-
-    @patch("cppllvm_build.machine", return_value="x86_64")
-    @patch("cppllvm_build.system", return_value="Linux")
-    def test_linux_wheel_platform_tag_uses_manylinux(self, *_args: object) -> None:
-        self.assertEqual(
-            wheel_platform_tag("linux_x86_64"),
-            LINUX_WHEEL_PLATFORM_TAG,
         )
 
     @patch("cppllvm_build.machine", return_value="arm64")

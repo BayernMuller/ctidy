@@ -45,5 +45,4 @@ prebuilt_release_tag = "master-796e77c"
 
 [tool.cibuildwheel]
 build-verbosity = 1
-repair-wheel-command = ""
 test-command = "python -c \"import importlib.resources as resources, os, subprocess; from cformat import __version__; data = resources.files('cformat').joinpath('data'); binary = 'clang-format.exe' if os.name == 'nt' else 'clang-format'; assert data.joinpath('bin', binary).is_file(); subprocess.check_call(['cformat', '--help']); subprocess.check_call(['cformat', '--version'])\""
