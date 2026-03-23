@@ -11,6 +11,8 @@ concurrency:
 
 jobs:
   build_wheels:
+    name: Build ${{ matrix.artifact_name }}
+    runs-on: ${{ matrix.runs_on }}
     permissions:
       id-token: write
     strategy:
@@ -33,15 +35,30 @@ jobs:
             runs_on: windows-latest
             cibw_archs: AMD64
             macos_deployment_target: ""
-    uses: ./.github/workflows/_wheel-build.yml
-    with:
-      package_name: cformat
-      package_dir: packages/cformat
-      artifact_name: ${{ matrix.artifact_name }}
-      runs_on: ${{ matrix.runs_on }}
-      cibw_archs: ${{ matrix.cibw_archs }}
-      macos_deployment_target: ${{ matrix.macos_deployment_target }}
-    secrets: inherit
+    env:
+      CIBW_BUILD: "cp39-*"
+      CPPLLVM_DOWNLOAD_DIR: ${{ github.workspace }}/.cache/cformat-downloads
+      CIBW_ARCHS: ${{ matrix.cibw_archs }}
+      MACOSX_DEPLOYMENT_TARGET: ${{ matrix.macos_deployment_target }}
+      CIBW_REPAIR_WHEEL_COMMAND: ""
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/cache@v4
+        with:
+          path: .cache/cformat-downloads
+          key: cformat-downloads-${{ matrix.artifact_name }}-${{ github.sha }}
+          restore-keys: |
+            cformat-downloads-${{ matrix.artifact_name }}-
+      - run: python -m pip install --upgrade cibuildwheel
+      - run: python -m cibuildwheel --output-dir "${{ github.workspace }}/wheelhouse"
+        working-directory: packages/cformat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: wheelhouse/*.whl
 
   publish:
     runs-on: ubuntu-latest
