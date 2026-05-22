@@ -95,7 +95,7 @@ The last command is useful in CI when you want formatting mismatches to fail the
 
 `cformat` does not build LLVM in this repository. During wheel builds it only:
 
-- downloads pinned prebuilt static binaries from `muttleyxd/clang-tools-static-binaries`
+- downloads pinned prebuilt static binaries from `cpp-linter/clang-tools-static-binaries`
 - verifies their `.sha512sum` files
 
 PyPI releases are wheel-only. `cformat` does not publish an `sdist`.

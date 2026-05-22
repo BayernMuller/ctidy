@@ -86,7 +86,7 @@ Package-specific usage and examples live in the package READMEs.
 
 This repository does not build LLVM from source. During wheel builds, each package only:
 
-- downloads pinned prebuilt static binaries from `muttleyxd/clang-tools-static-binaries`
+- downloads pinned prebuilt static binaries from `cpp-linter/clang-tools-static-binaries`
 - verifies their `.sha512sum` files
 - for `ctidy`, downloads official LLVM release headers for `lib/clang/<major>/include`
 - for `ctidy`, bundles the upstream LLVM `run-clang-tidy.py`

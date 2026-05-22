@@ -81,7 +81,7 @@ jobs:
                 `Pinned prebuilt release: ${process.env.PINNED_PREBUILT_RELEASE}`,
                 `Latest prebuilt release: ${process.env.LATEST_PREBUILT_RELEASE}`,
                 '',
-                'Review the new `muttleyxd/clang-tools-static-binaries` release tag and update both package `pyproject.toml` files when ready.',
+                'Review the new `cpp-linter/clang-tools-static-binaries` release tag and update both package `pyproject.toml` files when ready.',
               ].join('\n'),
             });
         env:

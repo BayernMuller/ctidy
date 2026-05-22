@@ -103,7 +103,7 @@ def current_platform(config: PackageBuildConfig) -> tuple[str, str]:
     if platform_spec is None:
         raise SetupError(
             f"{config.package_name} only publishes wheels for platforms with pinned "
-            "prebuilt static binaries from muttleyxd/clang-tools-static-binaries. "
+            "prebuilt static binaries from cpp-linter/clang-tools-static-binaries. "
             f"Supported platforms for LLVM {llvm_major_version(config)}: "
             f"{supported_platform_labels()}. "
             f"Got {host_system}/{host_machine}."
@@ -159,12 +159,12 @@ def download_prebuilt_asset(config: PackageBuildConfig, stem: str) -> Path:
     checksum_asset = checksum_asset_name(config, stem)
     asset_path = download_root(config) / release_tag / asset
     base_url = (
-        "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
+        "https://github.com/cpp-linter/clang-tools-static-binaries/releases/download/"
         f"{release_tag}/{asset}"
     )
     hash_path = asset_path.with_name(checksum_asset)
     checksum_url = (
-        "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
+        "https://github.com/cpp-linter/clang-tools-static-binaries/releases/download/"
         f"{release_tag}/{checksum_asset}"
     )
 
