@@ -27,10 +27,12 @@ else:  # pragma: no cover
 SUPPORTED_PREBUILT_PLATFORMS: dict[tuple[str, str], tuple[str, str]] = {
     ("Linux", "x86_64"): ("linux-amd64", ""),
     ("Linux", "amd64"): ("linux-amd64", ""),
-    ("Darwin", "x86_64"): ("macosx-amd64", ""),
-    ("Darwin", "amd64"): ("macosx-amd64", ""),
-    ("Darwin", "arm64"): ("macos-arm-arm64", ""),
-    ("Darwin", "aarch64"): ("macos-arm-arm64", ""),
+    ("Linux", "arm64"): ("linux-arm64", ""),
+    ("Linux", "aarch64"): ("linux-arm64", ""),
+    ("Darwin", "x86_64"): ("macos-amd64", ""),
+    ("Darwin", "amd64"): ("macos-amd64", ""),
+    ("Darwin", "arm64"): ("macos-arm64", ""),
+    ("Darwin", "aarch64"): ("macos-arm64", ""),
     ("Windows", "x86_64"): ("windows-amd64", ".exe"),
     ("Windows", "amd64"): ("windows-amd64", ".exe"),
 }
