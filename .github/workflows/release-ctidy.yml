@@ -20,8 +20,12 @@ jobs:
       matrix:
         include:
           - artifact_name: ctidy-wheel-linux-x86_64
-            runs_on: ubuntu-latest
+            runs_on: ubuntu-24.04
             cibw_archs: x86_64
+            macos_deployment_target: ""
+          - artifact_name: ctidy-wheel-linux-arm64
+            runs_on: ubuntu-24.04-arm
+            cibw_archs: arm64
             macos_deployment_target: ""
           - artifact_name: ctidy-wheel-macos-x86_64
             runs_on: macos-15-intel
