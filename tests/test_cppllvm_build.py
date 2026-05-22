@@ -6,8 +6,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from setuptools.errors import SetupError
-
 from cppllvm_build import (
     PackageBuildConfig,
     asset_name,
