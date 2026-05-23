@@ -22,7 +22,7 @@ LOCAL_RUN_CLANG_TIDY = (
 )
 LATEST_RELEASE_URL = "https://api.github.com/repos/llvm/llvm-project/releases/latest"
 LATEST_PREBUILT_RELEASE_URL = (
-    "https://api.github.com/repos/muttleyxd/clang-tools-static-binaries/releases/latest"
+    "https://api.github.com/repos/cpp-linter/clang-tools-static-binaries/releases/latest"
 )
 
 

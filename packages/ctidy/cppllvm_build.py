@@ -27,10 +27,12 @@ else:  # pragma: no cover
 SUPPORTED_PREBUILT_PLATFORMS: dict[tuple[str, str], tuple[str, str]] = {
     ("Linux", "x86_64"): ("linux-amd64", ""),
     ("Linux", "amd64"): ("linux-amd64", ""),
-    ("Darwin", "x86_64"): ("macosx-amd64", ""),
-    ("Darwin", "amd64"): ("macosx-amd64", ""),
-    ("Darwin", "arm64"): ("macos-arm-arm64", ""),
-    ("Darwin", "aarch64"): ("macos-arm-arm64", ""),
+    ("Linux", "arm64"): ("linux-arm64", ""),
+    ("Linux", "aarch64"): ("linux-arm64", ""),
+    ("Darwin", "x86_64"): ("macos-amd64", ""),
+    ("Darwin", "amd64"): ("macos-amd64", ""),
+    ("Darwin", "arm64"): ("macos-arm64", ""),
+    ("Darwin", "aarch64"): ("macos-arm64", ""),
     ("Windows", "x86_64"): ("windows-amd64", ".exe"),
     ("Windows", "amd64"): ("windows-amd64", ".exe"),
 }
@@ -88,6 +90,7 @@ def supported_platform_labels() -> str:
     return ", ".join(
         [
             "Linux/x86_64",
+            "Linux/arm64",
             "macOS/x86_64",
             "macOS/arm64",
             "Windows/x86_64",
@@ -103,7 +106,7 @@ def current_platform(config: PackageBuildConfig) -> tuple[str, str]:
     if platform_spec is None:
         raise SetupError(
             f"{config.package_name} only publishes wheels for platforms with pinned "
-            "prebuilt static binaries from muttleyxd/clang-tools-static-binaries. "
+            "prebuilt static binaries from cpp-linter/clang-tools-static-binaries. "
             f"Supported platforms for LLVM {llvm_major_version(config)}: "
             f"{supported_platform_labels()}. "
             f"Got {host_system}/{host_machine}."
@@ -159,12 +162,12 @@ def download_prebuilt_asset(config: PackageBuildConfig, stem: str) -> Path:
     checksum_asset = checksum_asset_name(config, stem)
     asset_path = download_root(config) / release_tag / asset
     base_url = (
-        "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
+        "https://github.com/cpp-linter/clang-tools-static-binaries/releases/download/"
         f"{release_tag}/{asset}"
     )
     hash_path = asset_path.with_name(checksum_asset)
     checksum_url = (
-        "https://github.com/muttleyxd/clang-tools-static-binaries/releases/download/"
+        "https://github.com/cpp-linter/clang-tools-static-binaries/releases/download/"
         f"{release_tag}/{checksum_asset}"
     )
 

@@ -1,7 +1,7 @@
 <p align="center">
-    <img src="assets/logo.png" width="400"/>
-    <br>
-    <img src='assets/logo_license.svg'>
+  <img src="assets/logo.png" width="400"/>
+  <br>
+  <img src='assets/logo_license.svg'>
 </p>
 
 <span align="center">
@@ -11,16 +11,16 @@
 </span>
 
 <p align="center">
-    <a href="https://pypi.org/project/ctidy/"><img src="https://img.shields.io/pypi/v/ctidy?label=ctidy&logo=pypi&logoColor=white" alt="ctidy"/></a>
-    <a href="https://pypi.org/project/cformat/"><img src="https://img.shields.io/pypi/v/cformat?label=cformat&logo=pypi&logoColor=white" alt="cformat"/></a>
+  <a href="https://pypi.org/project/ctidy/"><img src="https://img.shields.io/pypi/v/ctidy?label=ctidy&logo=pypi&logoColor=white" alt="ctidy"/></a>
+  <a href="https://pypi.org/project/cformat/"><img src="https://img.shields.io/pypi/v/cformat?label=cformat&logo=pypi&logoColor=white" alt="cformat"/></a>
 </p>
 
 <p align="center">
-    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml/badge.svg" alt="Checks"/></a>
-    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml/badge.svg" alt="Wheels ctidy"/></a>
-    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml/badge.svg" alt="Wheels cformat"/></a>
-    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml/badge.svg" alt="Release ctidy"/></a>
-    <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml/badge.svg" alt="Release cformat"/></a>
+  <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/checks.yml/badge.svg" alt="Checks"/></a>
+  <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-ctidy.yml/badge.svg" alt="Wheels ctidy"/></a>
+  <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/wheel-cformat.yml/badge.svg" alt="Wheels cformat"/></a>
+  <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-ctidy.yml/badge.svg" alt="Release ctidy"/></a>
+  <a href="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml"><img src="https://github.com/BayernMuller/cppllvm/actions/workflows/release-cformat.yml/badge.svg" alt="Release cformat"/></a>
 </p>
 
 ### Overview
@@ -40,12 +40,10 @@ This is useful when you want:
 
 ### Releases
 
-
-| Package | PyPI project | Release trigger | Package docs |
-| --- | --- | --- | --- |
-| `ctidy` | [ctidy](https://pypi.org/project/ctidy/) | `ctidy-v*` tag | [packages/ctidy/README.md](packages/ctidy/README.md) |
+| Package   | PyPI project                                 | Release trigger  | Package docs                                             |
+| --------- | -------------------------------------------- | ---------------- | -------------------------------------------------------- |
+| `ctidy`   | [ctidy](https://pypi.org/project/ctidy/)     | `ctidy-v*` tag   | [packages/ctidy/README.md](packages/ctidy/README.md)     |
 | `cformat` | [cformat](https://pypi.org/project/cformat/) | `cformat-v*` tag | [packages/cformat/README.md](packages/cformat/README.md) |
-
 
 PyPI releases are wheel-only. Neither package publishes an `sdist`.
 
@@ -53,14 +51,13 @@ PyPI releases are wheel-only. Neither package publishes an `sdist`.
 
 Available wheels are limited to the upstream LLVM 20 prebuilt assets pinned by this repository.
 
-
-| Platform | Python ABI | `ctidy` | `cformat` |
-| --- | --- | --- | --- |
-| Linux `x86_64` | `cp39+` | ✅ | ✅ |
-| macOS `x86_64` | `cp39+` | ✅ | ✅ |
-| macOS `arm64` | `cp39+` | ✅ | ✅ |
-| Windows `x86_64` | `cp39+` | ✅ | ✅ |
-
+| Platform         | Python ABI | `ctidy` | `cformat` |
+| ---------------- | ---------- | ------- | --------- |
+| Linux `x86_64`   | `cp39+`    | ✅      | ✅        |
+| Linux `arm64`    | `cp39+`    | ✅      | ✅        |
+| macOS `x86_64`   | `cp39+`    | ✅      | ✅        |
+| macOS `arm64`    | `cp39+`    | ✅      | ✅        |
+| Windows `x86_64` | `cp39+`    | ✅      | ✅        |
 
 If the upstream static build release does not publish an asset for an OS/CPU pair, this repository does not produce a wheel for that platform.
 
@@ -86,7 +83,7 @@ Package-specific usage and examples live in the package READMEs.
 
 This repository does not build LLVM from source. During wheel builds, each package only:
 
-- downloads pinned prebuilt static binaries from `muttleyxd/clang-tools-static-binaries`
+- downloads pinned prebuilt static binaries from `cpp-linter/clang-tools-static-binaries`
 - verifies their `.sha512sum` files
 - for `ctidy`, downloads official LLVM release headers for `lib/clang/<major>/include`
 - for `ctidy`, bundles the upstream LLVM `run-clang-tidy.py`
@@ -106,13 +103,13 @@ tools/       Release and maintenance helpers
 Install the workspace tooling:
 
 ```bash
-uv sync --group dev
+uv sync
 ```
 
 Run the repository checks:
 
 ```bash
-PYTHONPATH=packages/ctidy/src:packages/cformat/src:. python -m unittest discover -s tests
-ruff check .
-ty check .
+PYTHONPATH=packages/ctidy/src:packages/cformat/src:. uv run -m unittest discover -s tests
+uv run ruff check .
+uv run ty check .
 ```

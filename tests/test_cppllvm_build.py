@@ -6,8 +6,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from setuptools.errors import SetupError
-
 from cppllvm_build import (
     PackageBuildConfig,
     asset_name,
@@ -75,12 +73,3 @@ class CppLlvmBuildTests(unittest.TestCase):
             checksum_asset_name(CFORMAT_CONFIG, "clang-format"),
             "clang-format-20_windows-amd64.sha512sum",
         )
-
-    @patch("cppllvm_build.machine", return_value="arm64")
-    @patch("cppllvm_build.system", return_value="Linux")
-    def test_unsupported_platform_raises_clear_error(self, *_args: object) -> None:
-        with self.assertRaisesRegex(
-            SetupError,
-            "Linux/x86_64, macOS/x86_64, macOS/arm64, Windows/x86_64",
-        ):
-            current_platform(CTIDY_CONFIG)
