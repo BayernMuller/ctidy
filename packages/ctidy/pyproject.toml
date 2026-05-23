@@ -44,7 +44,7 @@ where = ["src"]
 ctidy = ["data/bin/run-clang-tidy.py"]
 
 [tool.ctidy]
-prebuilt_release_tag = "master-796e77c"
+prebuilt_release_tag = "master-69be5937"
 
 [tool.cibuildwheel]
 build-verbosity = 1
